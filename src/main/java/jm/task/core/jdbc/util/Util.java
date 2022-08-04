@@ -1,14 +1,13 @@
 package jm.task.core.jdbc.util;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Util {
     public void executeSQL(String sqlCommand) {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/USERS", "root", "1234");) {
-            Statement statement = conn.createStatement();
-            statement.executeUpdate(sqlCommand);
+            //Statement заменил на PreparedStatement
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlCommand);
+            preparedStatement.executeUpdate();
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }

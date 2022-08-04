@@ -3,10 +3,7 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,18 +37,14 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() {
         List <User> lu = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/USERS", "root", "1234");) {
-            Statement statement = conn.createStatement();
-            ResultSet res = statement.executeQuery("SELECT * FROM USER");
+            //Statement заменил на PreparedStatement
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM USER");
+            ResultSet res = preparedStatement.executeQuery();
             while (res.next()) {
-                int i = res.getInt("Id");
-                String name = res.getString("name");
-                String lastName = res.getString("lastName");
-                int age = res.getInt("age");
-
-                User user = new User(name, lastName, (byte)age);
-                System.out.println(user.toString());
+                // Сократил лишний код
+                User user = new User(res.getString("name"), res.getString("lastName"), (byte)res.getInt("age"));
+                System.out.println(user);
                 lu.add(user);
-
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
