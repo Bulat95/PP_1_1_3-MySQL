@@ -35,14 +35,11 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
-        // исправил название
         List <User> listUsers = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/USERS", "root", "1234");) {
-            //Statement заменил на PreparedStatement
             PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM USER");
             ResultSet res = preparedStatement.executeQuery();
             while (res.next()) {
-                // —ократил лишний код
                 User user = new User(res.getString("name"), res.getString("lastName"), (byte)res.getInt("age"));
                 System.out.println(user);
                 listUsers.add(user);
